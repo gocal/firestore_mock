@@ -75,13 +75,15 @@ class MockQuery extends Mock implements Query {
       sorted = _ktData
           .toList()
           .sortedWith((p1, p2) => p1.second[field].compareTo(p2.second[field]))
-          .associate((pair) => pair)
+          .associateTo(
+              linkedMapFrom<String, Map<String, dynamic>>(), (pair) => pair)
           .asMap();
     } else {
       sorted = _ktData
           .toList()
-          .sortedWith((p1, p2) => p2.second[field].compareTo(p2.second[field]))
-          .associate((pair) => pair)
+          .sortedWith((p1, p2) => p2.second[field].compareTo(p1.second[field]))
+          .associateTo(
+              linkedMapFrom<String, Map<String, dynamic>>(), (pair) => pair)
           .asMap();
     }
 
