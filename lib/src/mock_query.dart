@@ -74,7 +74,9 @@ class MockQuery extends Mock implements Query {
     if (!descending) {
       sorted = _ktData
           .toList()
-          .sortedWith((p1, p2) => p1.second[field].compareTo(p2.second[field]))
+          .sortedWith((p1, p2) => !p1.second.containsKey(field)
+              ? 0
+              : p1.second[field].compareTo(p2.second[field]))
           .associateTo(
               linkedMapFrom<String, Map<String, dynamic>>(), (pair) => pair)
           .asMap();
@@ -108,9 +110,10 @@ class MockQuery extends Mock implements Query {
 
   QueryPredicate _isGreaterThanOrEqualTo(
           String field, isGreaterThanOrEqualTo) =>
-      (entry) => isGreaterThanOrEqualTo != null
-          ? entry.value[field].compareTo(isGreaterThanOrEqualTo) >= 0
-          : true;
+      (entry) =>
+          isGreaterThanOrEqualTo != null && entry.value.containsKey(field)
+              ? entry.value[field].compareTo(isGreaterThanOrEqualTo) >= 0
+              : true;
 
   QueryPredicate _arrayContains(String field, arrayContains) =>
       (entry) => arrayContains != null
